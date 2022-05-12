@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Text;
+use App\Models\User;
+use Illuminate\Validation\Rule;
 
 class TextController extends Controller
 {
     public function index(){
-        $texts = Text::all();
+        $texts = User::find(1)->text;
         return view("text.index", compact("texts"));
     }
 
@@ -48,6 +50,14 @@ class TextController extends Controller
 
     public function update(Request $request, $id)
     {
+        $validated = $request->validate([
+            'title' => 'required|min:2|max:255',
+            'content' => 'required|min:5|max:1000',
+            'email' => ['required',Rule::unique('texts')->ignore($request->id)],
+            'price' => 'required|numeric',
+            'is_visible' => 'required'
+        ]);
+
         $text = Text::findOrFail($id);
 
         $text->title = $request['title'];
