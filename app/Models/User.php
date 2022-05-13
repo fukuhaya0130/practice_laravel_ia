@@ -45,4 +45,8 @@ class User extends Authenticatable
     public function text(){
         return $this->hasMany(Text::class);
     }
+
+    public function company(){
+        return $this->belongsToMany(Company::class)->withTimestamps();
+    }
 }
